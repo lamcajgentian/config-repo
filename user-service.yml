@@ -15,7 +15,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/user-db
     username: postgres
-    password: 1990
+    password: '{cipher}499cd3edd68d68e6aa313f4ed87e6b0c41b19617fc0ebe7b182a52e317cd89bf'
     driver-class-name: org.postgresql.Driver
     initialization-mode: always
 
@@ -69,3 +69,43 @@ info:
 
 demo:
   config: Update 2 demo-config
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      project-service:
+        baseConfig: default
+      task-service:
+        baseConfig: default
+        waitDurationInOpenState: 20000
+    configs:
+      default:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        permittedNumberOfCallsInHalfOpenState: 2
+  retry:
+    instances:
+      project-service:
+        baseConfig: default
+      task-service:
+        baseConfig: default
+    configs:
+      default:
+        maxAttempts: 3
+        waitDuration: 200
+
+
+  ratelimiter:
+    instances:
+      project-service:
+        baseConfig: default
+      task-service:
+        baseConfig: default
+    configs:
+      default:
+        limitRefreshPeriod: 50
+        limitForPeriod: 5
+        timeout-duration: 20000

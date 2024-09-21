@@ -65,3 +65,43 @@ info:
   application:
     name: project-service
     description: Ticketing Application Project Service
+
+
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      user-service:
+        baseConfig: default
+      task-service:
+        baseConfig: default
+        waitDurationInOpenState: 20000
+    configs:
+      default:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        permittedNumberOfCallsInHalfOpenState: 2
+  retry:
+    instances:
+      user-service:
+        baseConfig: default
+      task-service:
+        baseConfig: default
+    configs:
+      default:
+        maxAttempts: 3
+        waitDuration: 200
+  ratelimiter:
+    instances:
+      user-service:
+        baseConfig: default
+      task-service:
+        baseConfig: default
+    configs:
+      default:
+        limitRefreshPeriod: 50
+        limitForPeriod: 5
+        timeout-duration: 20000
