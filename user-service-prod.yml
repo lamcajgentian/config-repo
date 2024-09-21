@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: user-service
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user-prod-db
+    username: postgres
+    password: 1990
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+
+server:
+  port: 8081
+
+keycloak:
+  realm: cydeo-dev
+  auth-server-url: http://localhost:8080/auth
+  ssl-required: none
+  resource: ticketing-app
+  credentials:
+    secret: kuacBcR4Lp2y3f90rrrBI8t9zbYJuMO2
+  use-resource-role-mappings: true
+  bearer-only: true
+
+master:
+  user:
+    username: admin
+    password: admin
+  realm: master
+  client: master-client
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    status-page-url-path: ${management.context-path}/info
+    health-check-url-path: ${management.context-path}/health
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+management:
+  endpoint:
+    health:
+      show-details: "ALWAYS"
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  context-path: http://localhost:${server.port}/actuator
+
+info:
+  application:
+    name: user-service
+    description: Ticketing Application User Service
